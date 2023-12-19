@@ -117,7 +117,7 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { ref, onMounted } from "vue";
 import logo from "../assets/images/logo.png";
 import close from "../assets/images/close.png";
 import axios from "axios";
@@ -125,6 +125,18 @@ import success from "../assets/images/tick-circle.png";
 
 const token =
   "937af957925b8398c6c5e8b103b3578aa1e4edb43b00db8b3acd2e841d0d140d";
+
+const TOKEN_KEY = "authToken"; // Key for storing the authentication token
+
+// Check if the user is already logged in on component mount
+const initialLoginCheck = () => {
+  const storedToken = localStorage.getItem(TOKEN_KEY);
+  if (storedToken) {
+    isLogged.value = true;
+  }
+};
+
+onMounted(initialLoginCheck);
 
 const isLogged = ref(false);
 const modal = ref(false);
@@ -163,6 +175,9 @@ const login = async () => {
     // Handle the response here
     console.log("Response:", response.data);
     console.log(response);
+    // Save the token to localStorage
+    localStorage.setItem(TOKEN_KEY, token);
+
     isLogged.value = true;
     console.log(isLogged.value);
   } catch (error) {
