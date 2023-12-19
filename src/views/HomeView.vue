@@ -32,7 +32,7 @@ onMounted(() => {
 
 <template>
   <main>
-    <div class="bg-gradient-to-b from-[#d5dee3] px-20 py-12">
+    <div class="bg-gradient-to-b from-[#e0e9ee] px-20 py-12">
       <div class="flex items-center justify-between py-4">
         <h1 class="text-5xl font-extrabold">ბლოგი</h1>
         <img :src="blog" />
