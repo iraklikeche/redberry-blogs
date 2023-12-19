@@ -1,7 +1,7 @@
 <script setup>
-import logo from "../assets/images/logo.png";
 import blog from "../assets/images/blog.png";
 import { ref, onMounted, watch } from "vue";
+import Card from "@/components/Card.vue";
 import axios from "axios";
 
 const apiURL = "https://api.blog.redberryinternship.ge/api/categories";
@@ -29,15 +29,9 @@ onMounted(() => {
   fetchData();
 });
 </script>
-<!-- [`w-${percent}/12`]: show -->
+
 <template>
   <main>
-    <nav class="flex justify-between px-20 py-6">
-      <img :src="logo" class="w-[150px] h-6" />
-      <button class="bg-[#5D37F3] px-4 py-2 text-white rounded-lg text-sm">
-        შესვლა
-      </button>
-    </nav>
     <div class="bg-gradient-to-b from-[#d5dee3] px-20 py-12">
       <div class="flex items-center justify-between py-4">
         <h1 class="text-5xl font-extrabold">ბლოგი</h1>
@@ -54,24 +48,7 @@ onMounted(() => {
           </li>
         </ul>
       </div>
-      <div class="mt-12 grid grid-cols-3 gap-8">
-        <div class="flex flex-col">
-          <img src="https://picsum.photos/400/330" class="rounded-lg" />
-          <p class="text-xs font-extrabold">ავტორი</p>
-          <p class="text-xs opacity-40">11.11.11</p>
-          <p class="font-bold">
-            Lorem ipsum dolor sit, amet consectetur adipisicing elit. Similique,
-            nisi!
-          </p>
-          <p>CATEGORIES,CATEGORIES1,CATEGORIES2</p>
-          <p>
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Libero
-            laboriosam praesentium qui facilis? Animi maiores, saepe debitis
-            architecto possimus facilis? Ex, eius. Sint, delectus magni.
-          </p>
-          <button>სრულად ნახვა</button>
-        </div>
-      </div>
+      <Card />
     </div>
   </main>
 </template>
