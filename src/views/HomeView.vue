@@ -1,6 +1,6 @@
 <script setup>
 import blog from "../assets/images/blog.png";
-import { ref, onMounted, watch } from "vue";
+import { ref, onMounted } from "vue";
 import Card from "@/components/Card.vue";
 import axios from "axios";
 
@@ -42,9 +42,11 @@ onMounted(() => {
           <li
             v-for="category in categoryData"
             :key="category.id"
-            class="text-xs rounded-xl tracking-wider text-[#31b5] bg-cyan-400 py-2 px-4 flex-nowrap"
+            class="text-xs rounded-xl tracking-wider text-[#31b5] bg-cyan-400 py-2 px-4 flex-nowrap font-medium border border-black"
           >
-            {{ category.title }}
+            <button>
+              {{ category.title }}
+            </button>
           </li>
         </ul>
       </div>
