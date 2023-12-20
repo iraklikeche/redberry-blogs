@@ -1,5 +1,6 @@
 <script setup>
 import blog from "../assets/images/blog.png";
+import Navbar from "@/components/Navbar.vue";
 import { ref, onMounted } from "vue";
 import Card from "@/components/Card.vue";
 import axios from "axios";
@@ -31,6 +32,7 @@ onMounted(() => {
 </script>
 
 <template>
+  <Navbar />
   <main>
     <div class="bg-gradient-to-b from-[#e0e9ee] px-20 py-12">
       <div class="flex items-center justify-between py-4">

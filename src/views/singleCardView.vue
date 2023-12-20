@@ -1,7 +1,10 @@
 <template>
+  <Navbar />
   <div class="px-20">
-    <div class="grid items-center justify-center">
-      <button @click="goToHomePage">{{ arrowLeft }}</button>
+    <div class="grid grid-cols-[25%,75%] justify-center">
+      <div>
+        <img :src="arrowLeft" class="cursor-pointer" @click="goBack" />
+      </div>
       <div class="grid grid-cols-1 max-w-2xl">
         <img src="https://picsum.photos/720/330" class="rounded-lg" />
         <p class="text-xs font-extrabold mt-8 mb-2">ავტორი</p>
@@ -56,9 +59,15 @@
 <script setup>
 import Card from "@/components/Card.vue";
 import { useRouter } from "vue-router";
-import arrowLeft from "../assets/images/arrow-left.svg";
+import Navbar from "@/components/Navbar.vue";
+import arrowLeft from "../assets/images/Arrow-left.png";
 
 const router = useRouter();
+
+const goBack = () => {
+  // Use router.go(-1) to navigate back one step in the history.
+  router.go(-1);
+};
 
 const goToHomePage = () => {
   // Use the router.push method to navigate to the home page
