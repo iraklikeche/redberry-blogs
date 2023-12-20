@@ -12,7 +12,7 @@
       <div>
         <h2 class="text-3xl font-bold text-left mb-8">ბლოგის დამატება</h2>
 
-        <form class="max-w-[600px]">
+        <form class="max-w-[600px]" @submit.prevent="submitForm">
           <label class="font-bold">ატვირთე ფოტო</label>
           <div
             v-if="!selectedFile"
@@ -114,6 +114,8 @@
               placeholder="შეიყვანეთ აღწერა"
             ></textarea>
             <p class="text-[#85858d] text-xs mt-1">მინიმუმ 2 სიმბოლო</p>
+
+            მინიმუმ 4 სიმბოლო
           </div>
 
           <!-- *************************** DATE/CATEGORY/EMAIL ***************************** -->
@@ -133,8 +135,9 @@
                 class="bg-gray-500 px-4 py-[9px] rounded-xl w-full mt-1"
               >
                 <option value="" disabled selected>აირჩიეთ კატეგორია</option>
-                <option value="test">test</option>
-                <option value="test">test</option>
+                <option v-for="category in categoryData" :key="category.id">
+                  {{ category.title }}
+                </option>
               </select>
             </div>
             <div>
@@ -147,7 +150,10 @@
             </div>
           </div>
           <div class="mt-12 flex items-end justify-end">
-            <button class="bg-[#5D37F3] py-2 w-[284px] text-white rounded-lg">
+            <button
+              class="bg-[#5D37F3] py-2 w-[284px] text-white rounded-lg"
+              @click="submitForm"
+            >
               გამოქვეყნება
             </button>
           </div>
@@ -163,9 +169,36 @@ import arrowLeft from "../assets/images/arrow-left.png";
 import addIcon from "../assets/images/folder-add.png";
 import imageIcon from "../assets/images/gallery.png";
 import { useRouter } from "vue-router";
-import { ref } from "vue";
+import { ref, onMounted, computed } from "vue";
+import axios from "axios";
+
+const apiURL = "https://api.blog.redberryinternship.ge/api/categories";
+
+const token =
+  "937af957925b8398c6c5e8b103b3578aa1e4edb43b00db8b3acd2e841d0d140d";
 
 const selectedFile = ref(null);
+
+const categoryData = ref([]);
+
+const fetchData = async () => {
+  try {
+    const response = await axios.get(apiURL, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+    });
+    categoryData.value = response.data.data;
+    // console.log(categoryData.value);
+  } catch (error) {
+    console.error("Error fetching categories:", error);
+  }
+};
+
+onMounted(() => {
+  fetchData();
+});
 
 const displaySelectedFile = (event) => {
   const fileInput = event.target;
@@ -183,6 +216,10 @@ const router = useRouter();
 const goBack = () => {
   // Use router.go(-1) to navigate back one step in the history.
   router.go(-1);
+};
+
+const submitForm = () => {
+  console.log(1);
 };
 </script>
 
