@@ -189,7 +189,14 @@
           }"
         >
           <option value="" disabled selected>აირჩიეთ კატეგორია</option>
-          <option v-for="category in categoryData" :key="category.id">
+          <option
+            v-for="category in categoryData"
+            :key="category.id"
+            :style="{
+              color: category.text_color,
+              background: category.background_color,
+            }"
+          >
             {{ category.title }}
           </option>
         </select>
