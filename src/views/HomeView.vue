@@ -5,29 +5,16 @@ import { ref, onMounted } from "vue";
 import Card from "@/components/Card.vue";
 import axios from "axios";
 
-const apiURL = "https://api.blog.redberryinternship.ge/api/categories";
-
-const token =
-  "937af957925b8398c6c5e8b103b3578aa1e4edb43b00db8b3acd2e841d0d140d";
+import { fetchData } from "../components/getCategory.js";
 
 const categoryData = ref([]);
 
-const fetchData = async () => {
+onMounted(async () => {
   try {
-    const response = await axios.get(apiURL, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
-      },
-    });
-    categoryData.value = response.data.data;
+    categoryData.value = await fetchData();
   } catch (error) {
-    console.error("Error fetching categories:", error);
+    console.error("Error in component:", error);
   }
-};
-
-onMounted(() => {
-  fetchData();
 });
 </script>
 
