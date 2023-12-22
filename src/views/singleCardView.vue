@@ -1,50 +1,40 @@
 <template>
   <Navbar />
-  <div class="px-20">
+  <div class="px-20 pt-10">
     <div class="grid grid-cols-[25%,75%] justify-center">
       <div>
-        <img :src="arrowLeft" class="cursor-pointer" @click="goBack" />
+        <img :src="arrowLeft" class="cursor-pointer" @click="goToHomePage" />
       </div>
       <div class="grid grid-cols-1 max-w-2xl">
-        <img src="https://picsum.photos/720/330" class="rounded-lg" />
-        <p class="text-xs font-extrabold mt-8 mb-2">ავტორი</p>
+        <img :src="singleBlog.image" class="rounded-lg" />
+        <p class="text-xs font-extrabold mt-8 mb-2">{{ singleBlog.author }}</p>
         <p class="text-xs mb-4 text-[#85858D]">
-          11.11.11 &#x2022; email@redberry.ge
+          {{ singleBlog.publish_date }}
+          <span v-if="singleBlog.email"> &#x2022; {{ singleBlog.email }}</span>
         </p>
         <p class="font-bold text-3xl">
-          Lorem ipsum dolor sit, amet consectetur adipisicing elit. Similique,
-          nisi!
+          {{ singleBlog.title }}
         </p>
-        <p class="my-6">CATEGORIES,CATEGORIES1,CATEGORIES2</p>
+        <ul class="my-6 flex gap-4 gap-y-2 flex-wrap">
+          <li
+            v-for="category in singleBlog.categories"
+            :key="category.id"
+            class="text-xs rounded-xl tracking-wider py-2 px-4 flex-wrap font-medium"
+            :style="{
+              color: category.text_color,
+              background: category.background_color,
+            }"
+          >
+            {{ category.title }}
+          </li>
+        </ul>
         <p class="mb-4 text-[#404049]">
-          Lorem ipsum, dolor sit amet consectetur adipisicing elit. Labore quia,
-          eaque dolorem quos sit tempore unde hic tenetur saepe, neque et rem
-          nobis, debitis dolorum quidem? Tempore corporis eveniet quod modi,
-          tempora dolores consectetur ipsum obcaecati officiis commodi
-          temporibus suscipit veniam animi optio. Fugit velit voluptates,
-          reprehenderit iure dolorum qui deleniti amet molestias voluptate
-          assumenda veritatis dolore saepe non sequi aliquid quidem. Impedit
-          voluptatibus amet corporis a, error ad quas placeat necessitatibus
-          odio vero! Dolores, ratione, aliquid dolorem reiciendis laboriosam
-          veniam perspiciatis deserunt unde vel perferendis ea at fuga sunt a
-          mollitia, ab veritatis expedita quod optio itaque debitis facilis
-          voluptatibus. Tempore, mollitia odio natus officiis vitae molestias
-          nulla iure perspiciatis delectus necessitatibus reiciendis aliquam
-          aspernatur est beatae quidem error hic. At quas id eligendi
-          perferendis ea, suscipit dignissimos reprehenderit. Illum obcaecati,
-          esse officiis, quae temporibus, dolores ducimus provident odit nisi ea
-          a quibusdam odio neque dignissimos? Provident nemo nostrum blanditiis
-          molestiae tenetur consequatur nisi velit dicta corrupti cupiditate?
-          Voluptatibus, rerum. Reiciendis dignissimos assumenda adipisci facere
-          quisquam modi, necessitatibus autem minus qui pariatur dicta, ipsa
-          aliquid alias laborum, corrupti optio quidem maiores officia tempora
-          quas voluptas perferendis repellat! Cum autem repudiandae omnis et
-          esse. Earum pariatur eligendi labore qui ea.
+          {{ singleBlog.description }}
         </p>
       </div>
     </div>
-    <div class="mt-12">
-      <div class="flex items-center justify-between mb-8">
+    <div class="mt-12 p-12">
+      <div class="flex items-center justify-between mb-6">
         <h2 class="text-2xl font-black">მსგავსი სტატიები</h2>
         <div>
           <button>1</button>
@@ -58,34 +48,58 @@
 
 <script setup>
 import Card from "@/components/Card.vue";
-import { useRouter } from "vue-router";
+import { useRoute, useRouter } from "vue-router";
 import Navbar from "@/components/Navbar.vue";
 import arrowLeft from "../assets/images/Arrow-left.png";
-import { onMounted } from "vue";
+import { onMounted, ref } from "vue";
 import axios from "axios";
+
+const route = useRoute();
+
+const id = route.params.id;
+const singleBlog = ref([]);
+console.log(id);
 
 const apiUrl = "https://api.blog.redberryinternship.ge/api/blogs";
 const token =
   "937af957925b8398c6c5e8b103b3578aa1e4edb43b00db8b3acd2e841d0d140d";
 
+const getById = `https://api.blog.redberryinternship.ge/api/blogs/${id}`;
+console.log(getById);
+
 const router = useRouter();
 
-const goBack = () => {
-  // Use router.go(-1) to navigate back one step in the history.
-  router.go(-1);
+const goToHomePage = () => {
+  // Use the router.push method to navigate to the home page
+  router.push({ name: "home" });
 };
 
 onMounted(async () => {
   try {
-    const response = await axios.get(apiUrl, {
+    const response = await axios.get(getById, {
       headers: {
         Authorization: `Bearer ${token}`,
         "Content-Type": "application/json",
       },
     });
-    console.log(response);
+    console.log(response.data);
+    singleBlog.value = response.data;
   } catch (error) {
     console.error(error);
   }
 });
+
+// onMounted(async () => {
+//   try {
+//     const response = await axios.get(apiUrl, {
+//       headers: {
+//         Authorization: `Bearer ${token}`,
+//         "Content-Type": "application/json",
+//       },
+//     });
+//     // console.log(response.data);
+//   } catch (error) {
+//     console.error(error);
+//   }
+// });
 </script>

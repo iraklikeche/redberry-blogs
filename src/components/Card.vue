@@ -1,6 +1,6 @@
 <template>
-  <div class="mt-12 grid grid-cols-3 gap-8">
-    <div v-for="blog in blogs" :key="blog.id">
+  <div class="grid grid-cols-3 gap-8">
+    <div v-for="blog in filteredBlogs" :key="blog.id">
       <div class="flex flex-col">
         <div>
           <img :src="blog.image" class="rounded-lg w-full" />
@@ -10,7 +10,7 @@
         <p class="font-bold">
           {{ blog.title }}
         </p>
-        <ul class="my-2 flex gap-4 gap-x-6 flex-wrap">
+        <ul class="my-2 flex gap-4 gap-y-2 flex-wrap">
           <li
             v-for="category in blog.categories"
             :key="category.id"
@@ -27,16 +27,19 @@
           {{ blog.description }}
         </p>
 
-        <router-link to="/singleCard" class="text-[#5D37F3] text-sm font-medium"
-          >სრულად ნახვა</router-link
+        <RouterLink
+          :to="{ name: 'singleCard', params: { id: blog.id } }"
+          class="text-[#5D37F3] text-sm font-medium"
         >
+          სრულად ნახვა
+        </RouterLink>
       </div>
     </div>
   </div>
 </template>
 
 <script setup>
-import { ref, onMounted } from "vue";
+import { ref, onMounted, computed } from "vue";
 import axios from "axios";
 
 const blogs = ref([]);
@@ -53,21 +56,34 @@ onMounted(async () => {
         "Content-Type": "application/json",
       },
     });
-    console.log(response);
-    console.log(response.data.data);
+
+    // console.log(response.data.data);
     blogs.value = response.data.data;
   } catch (error) {
     console.error(error);
   }
 });
+
+const props = defineProps(["activeCategories"]);
+
+const filteredBlogs = computed(() => {
+  if (!props.activeCategories || props.activeCategories.length === 0) {
+    return blogs.value;
+  }
+
+  return blogs.value.filter((blog) => {
+    return blog.categories.some((category) =>
+      props.activeCategories.includes(category.id)
+    );
+  });
+});
 </script>
 
-
 <style scoped>
- .line-clamp-2 {
-    display: -webkit-box;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-    -webkit-line-clamp: 2;
-  }
+.line-clamp-2 {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  -webkit-line-clamp: 2;
+}
 </style>

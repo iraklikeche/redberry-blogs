@@ -1,5 +1,8 @@
 <template>
-  <nav class="flex justify-between px-20 py-6">
+  <nav
+    class="divide-y flex justify-between px-20 border-b border-[#e4e3eb] py-4"
+  >
+    <!-- divide-y flex items-center justify-center flex-col border-b border-[#e4e3eb] py-8 -->
     <img :src="logo" class="w-[150px] h-6" />
     <button
       class="bg-[#5D37F3] px-4 py-2 text-white rounded-lg text-sm"
