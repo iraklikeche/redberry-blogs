@@ -278,6 +278,8 @@ import axios from "axios";
 import { fetchData } from "../components/getCategory.js";
 
 const postRequestURL = "https://api.blog.redberryinternship.ge/api/blogs";
+const token =
+  "937af957925b8398c6c5e8b103b3578aa1e4edb43b00db8b3acd2e841d0d140d";
 
 // ******************* VALIDATIONS ******************************
 const selectedFile = ref(null);
@@ -344,22 +346,11 @@ const isFormInvalid = computed(() => {
   );
 });
 
-// SUBMISSION
-// const submitForm = () => {
-//   if (!isInputInvalid.value && !isTitleInvalid.value && !isDescInvalid.value) {
-//     console.log("Input is valid: true", authorName.value, title.value);
-//   } else {
-//     console.log("Input is valid: false", authorName.value, title.value);
-//   }
-//   console.log(1);
-// };
-
-// *****************************************************************
-
 // ******************************** POST REQUEST ***************************
 
 // SUBMISSION
 const submitForm = async () => {
+  console.log(1);
   if (!isFormInvalid.value) {
     try {
       const formData = new FormData();

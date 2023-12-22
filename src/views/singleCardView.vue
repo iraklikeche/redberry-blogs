@@ -61,6 +61,12 @@ import Card from "@/components/Card.vue";
 import { useRouter } from "vue-router";
 import Navbar from "@/components/Navbar.vue";
 import arrowLeft from "../assets/images/Arrow-left.png";
+import { onMounted } from "vue";
+import axios from "axios";
+
+const apiUrl = "https://api.blog.redberryinternship.ge/api/blogs";
+const token =
+  "937af957925b8398c6c5e8b103b3578aa1e4edb43b00db8b3acd2e841d0d140d";
 
 const router = useRouter();
 
@@ -69,8 +75,17 @@ const goBack = () => {
   router.go(-1);
 };
 
-const goToHomePage = () => {
-  // Use the router.push method to navigate to the home page
-  router.push({ name: "home" });
-};
+onMounted(async () => {
+  try {
+    const response = await axios.get(apiUrl, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+    });
+    console.log(response);
+  } catch (error) {
+    console.error(error);
+  }
+});
 </script>
