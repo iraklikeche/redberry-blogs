@@ -195,13 +195,40 @@
             <span
               v-for="selectedCat in selectedCategories"
               :key="selectedCat.id"
-              class="text-xs rounded-[30px] tracking-wider py-2 px-4 font-medium border cursor-pointer mr-2 last:mr-0 relative z-10"
+              class="text-xs rounded-[30px] tracking-wider py-2 px-4 pr-2 font-medium border cursor-pointer mr-2 last:mr-0 relative z-10"
               :style="{
                 background: selectedCat.background_color,
                 color: selectedCat.text_color,
               }"
             >
               {{ selectedCat.title }}
+              <span
+                @click="($event) => removeSelectedCategory($event, selectedCat)"
+                class="inline-block align-middle"
+              >
+                <svg
+                  width="16"
+                  height="16"
+                  viewBox="0 0 16 16"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M5.17188 10.8284L10.8287 5.17151"
+                    stroke="white"
+                    stroke-width="1.5"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  />
+                  <path
+                    d="M10.8287 10.8285L5.17188 5.17163"
+                    stroke="white"
+                    stroke-width="1.5"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  />
+                </svg>
+              </span>
             </span>
 
             <span v-if="selectedCategories.length === 0">
@@ -333,30 +360,9 @@ const isDropdownOpen = ref(false);
 
 // ********************************************** CATEGORIES DROPDWON **********************************************
 
-// const toggleDropdown = () => {
-//   isDropdownOpen.value = !isDropdownOpen.value;
-// };
-
-// const selectCategory = (category) => {
-//   selectedCategory.value = category;
-//   isDropdownOpen.value = false;
-// };
-
 const toggleDropdown = () => {
   isDropdownOpen.value = !isDropdownOpen.value;
 };
-
-// const selectCategory = (category) => {
-//   // Check if the category is not already selected
-//   if (
-//     !selectedCategories.value.some(
-//       (selectedCat) => selectedCat.id === category.id
-//     )
-//   ) {
-//     selectedCategories.value.push(category);
-//   }
-//   isDropdownOpen.value = false;
-// };
 
 const selectCategory = (category) => {
   // Check if the category is not already selected
@@ -371,7 +377,9 @@ const selectCategory = (category) => {
   isDropdownOpen.value = false;
 };
 
-const removeSelectedCategory = (selectedCat) => {
+const removeSelectedCategory = (event, selectedCat) => {
+  console.log(1);
+  event.stopPropagation();
   selectedCategories.value = selectedCategories.value.filter(
     (cat) => cat.id !== selectedCat.id
   );
@@ -413,13 +421,12 @@ const isEmailInvalid = computed(() => {
 
 const isFormInvalid = computed(() => {
   return (
-    !selectedFile.value ||
+    // !selectedFile.value ||
     isInputInvalid.value ||
     isTitleInvalid.value ||
     isDescInvalid.value ||
     !userSelectedDate.value ||
-    !userSelectedCategory.value
-    // Add other validations as needed
+    !selectedCategories.value.length > 0
   );
 });
 
@@ -440,6 +447,25 @@ const submitForm = async () => {
       formData.append("publish_date", selectedDate.value);
       formData.append("categories", selectedCategories.value);
       formData.append("image", selectedFile.value);
+
+      console.log("Data to be sent to backend:", {
+        author: authorName.value,
+        title: title.value,
+        description: description.value,
+        email: email.value,
+        publish_date: selectedDate.value,
+        categories: selectedCategories.value,
+        image: selectedFile.value,
+      });
+
+      for (const [key, value] of formData.entries()) {
+        console.log(
+          `${key}:`,
+          typeof value === "object" ? JSON.stringify(value) : value
+        );
+      }
+
+      console.log(formData.value);
 
       const response = await axios.post(postRequestURL, formData, {
         headers: {
