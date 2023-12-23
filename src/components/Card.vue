@@ -3,7 +3,7 @@
     <div v-for="blog in filteredBlogs" :key="blog.id">
       <div class="flex flex-col">
         <div>
-          <img :src="blog.image" class="rounded-lg w-full" />
+          <img :src="blog.image" class="rounded-lg w-full h-[328px]" />
         </div>
         <p class="text-xs font-extrabold mt-4 mb-2">{{ blog.author }}</p>
         <p class="text-xs mb-4">{{ blog.publish_date }}</p>
@@ -57,7 +57,7 @@ onMounted(async () => {
       },
     });
 
-    // console.log(response.data.data);
+    console.log(response.data.data);
     blogs.value = response.data.data;
   } catch (error) {
     console.error(error);

@@ -421,7 +421,7 @@ const isEmailInvalid = computed(() => {
 
 const isFormInvalid = computed(() => {
   return (
-    // !selectedFile.value ||
+    !selectedFile.value ||
     isInputInvalid.value ||
     isTitleInvalid.value ||
     isDescInvalid.value ||
@@ -445,27 +445,19 @@ const submitForm = async () => {
       formData.append("description", description.value);
       formData.append("email", email.value);
       formData.append("publish_date", selectedDate.value);
-      formData.append("categories", selectedCategories.value);
+
+      const categoryIdsArray = selectedCategories.value.map(
+        (category) => category.id
+      );
+      formData.append("categories", JSON.stringify(categoryIdsArray));
+
+      // const categoryIdsString = selectedCategories.value
+      //   .map((category) => category.id)
+      //   .join(",");
+
       formData.append("image", selectedFile.value);
 
-      console.log("Data to be sent to backend:", {
-        author: authorName.value,
-        title: title.value,
-        description: description.value,
-        email: email.value,
-        publish_date: selectedDate.value,
-        categories: selectedCategories.value,
-        image: selectedFile.value,
-      });
-
-      for (const [key, value] of formData.entries()) {
-        console.log(
-          `${key}:`,
-          typeof value === "object" ? JSON.stringify(value) : value
-        );
-      }
-
-      console.log(formData.value);
+      console.log("Form Data:", Object.fromEntries(formData));
 
       const response = await axios.post(postRequestURL, formData, {
         headers: {
@@ -483,6 +475,16 @@ const submitForm = async () => {
       }
     } catch (error) {
       console.error("Error submitting blog post:", error);
+      try {
+        const errorResponse = error.response;
+        if (errorResponse && errorResponse.data && errorResponse.data.errors) {
+          console.error("Validation Errors:", errorResponse.data.errors);
+          // You can handle these validation errors here, display them to the user, etc.
+        }
+      } catch (error) {
+        console.error("Error handling validation errors:", error);
+      }
+      // Log specific validation errors from the API response
     }
   } else {
     console.log("Form is invalid. Please check the input values.");
