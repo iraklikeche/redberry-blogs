@@ -1,5 +1,5 @@
 <template>
-  <form class="max-w-[600px]" @submit.prevent="submitForm">
+  <form class="max-w-[600px] pb-8" @submit.prevent="submitForm">
     <label class="font-bold">ატვირთე ფოტო</label>
     <div
       v-if="!selectedFile"
@@ -179,35 +179,63 @@
       <div class="relative">
         <label class="font-bold">კატეგორია *</label>
 
-        <select
-          name="category"
-          v-model="selectedCategory"
-          @change="userSelectedCategory = true"
-          class="bg-[#e4e3eb] px-4 py-[9px] rounded-xl w-full mt-1 cursor-pointer outline-[#5d37f3] border outline-[1.5px]"
-          :class="{
-            'border-[#14d81c]': userSelectedCategory && selectedCategory,
-          }"
-        >
-          <option value="" disabled selected>აირჩიეთ კატეგორია</option>
-          <option
-            v-for="category in categoryData"
-            :key="category.id"
+        <div class="custom-dropdown">
+          <div
+            class="selected-option bg-[#e4e3eb] px-2 py-[9px] rounded-xl w-full mt-1 cursor-pointer outline-[#5d37f3] border outline-[1.5px] text-[#85858d] whitespace-nowrap overflow-hidden"
             :style="{
-              color: category.text_color,
-              background: category.background_color,
+              background: selectedCategories
+                ? selectedCategories.background_color
+                : '#e4e3eb',
+              color: selectedCategories
+                ? selectedCategories.text_color
+                : '#85858d',
             }"
+            @click="toggleDropdown"
           >
-            {{ category.title }}
-          </option>
-        </select>
-        <img
-          :src="arrowDown"
-          class="cursor-pointer absolute top-[50%] right-[10px] translate-x-[-10%] translate-y-[20%] pointer-events-none"
-        />
+            <span
+              v-for="selectedCat in selectedCategories"
+              :key="selectedCat.id"
+              class="text-xs rounded-[30px] tracking-wider py-2 px-4 font-medium border cursor-pointer mr-2 last:mr-0 relative z-10"
+              :style="{
+                background: selectedCat.background_color,
+                color: selectedCat.text_color,
+              }"
+            >
+              {{ selectedCat.title }}
+            </span>
+
+            <span v-if="selectedCategories.length === 0">
+              აირჩიეთ კატეგორია
+            </span>
+          </div>
+
+          <div
+            v-show="isDropdownOpen"
+            class="absolute z-10 overflow-y-scroll w-full flex flex-wrap gap-[10px] rounded-xl gap-y-2 shadow-2xl shadow-black h-[144px] mt-2 py-2 px-4 bg-white"
+          >
+            <div
+              v-for="category in categoryData"
+              :key="category.id"
+              class="text-xs rounded-[30px] tracking-wider py-2 px-4 font-medium border cursor-pointer"
+              :style="{
+                color: category.text_color,
+                background: category.background_color,
+              }"
+              @click="selectCategory(category)"
+            >
+              {{ category.title }}
+            </div>
+          </div>
+        </div>
+        <div
+          class="absolute top-[50%] right-[10px] translate-x-[-10%] translate-y-[20%] pointer-events-none z-20 overflow-hidden"
+        >
+          <img :src="arrowDown" class="cursor-pointer" />
+        </div>
       </div>
       <!-- ***************** EMAIL ********************* -->
 
-      <div>
+      <div class="mt-2">
         <label class="font-bold">ელ-ფოსტა</label>
         <input
           v-model="email"
@@ -255,7 +283,7 @@
         </ul>
       </div>
     </div>
-    <div class="mt-6 flex items-end justify-end">
+    <div class="mt-10 flex items-end justify-end">
       <button
         class="bg-[#5D37F3] py-2 w-[284px] text-white rounded-lg"
         :class="{
@@ -299,8 +327,57 @@ const typingEmail = ref(false);
 const selectedDate = ref("");
 const userSelectedDate = ref(false);
 
-const selectedCategory = ref("");
+const selectedCategories = ref([]);
 const userSelectedCategory = ref(false);
+const isDropdownOpen = ref(false);
+
+// ********************************************** CATEGORIES DROPDWON **********************************************
+
+// const toggleDropdown = () => {
+//   isDropdownOpen.value = !isDropdownOpen.value;
+// };
+
+// const selectCategory = (category) => {
+//   selectedCategory.value = category;
+//   isDropdownOpen.value = false;
+// };
+
+const toggleDropdown = () => {
+  isDropdownOpen.value = !isDropdownOpen.value;
+};
+
+// const selectCategory = (category) => {
+//   // Check if the category is not already selected
+//   if (
+//     !selectedCategories.value.some(
+//       (selectedCat) => selectedCat.id === category.id
+//     )
+//   ) {
+//     selectedCategories.value.push(category);
+//   }
+//   isDropdownOpen.value = false;
+// };
+
+const selectCategory = (category) => {
+  // Check if the category is not already selected
+  if (
+    !selectedCategories.value.some(
+      (selectedCat) => selectedCat.id === category.id
+    )
+  ) {
+    // Push the category to selectedCategories without modifying the title
+    selectedCategories.value.push(category);
+  }
+  isDropdownOpen.value = false;
+};
+
+const removeSelectedCategory = (selectedCat) => {
+  selectedCategories.value = selectedCategories.value.filter(
+    (cat) => cat.id !== selectedCat.id
+  );
+};
+
+// ************************ VALIDATIONS ***************************
 
 const isGeorgianLetters = computed(() => {
   const georgianLettersRegex = /^[\u10A0-\u10FF\s]+$/;
@@ -346,6 +423,8 @@ const isFormInvalid = computed(() => {
   );
 });
 
+// **************************************************************************
+
 // ******************************** POST REQUEST ***************************
 
 // SUBMISSION
@@ -359,7 +438,7 @@ const submitForm = async () => {
       formData.append("description", description.value);
       formData.append("email", email.value);
       formData.append("publish_date", selectedDate.value);
-      formData.append("categories", selectedCategory.value);
+      formData.append("categories", selectedCategories.value);
       formData.append("image", selectedFile.value);
 
       const response = await axios.post(postRequestURL, formData, {
@@ -386,6 +465,8 @@ const submitForm = async () => {
 
 // *************************************************************************
 
+// ***********************************GET CATEGORIES*****************************
+
 const categoryData = ref([]);
 
 onMounted(async () => {
@@ -395,6 +476,8 @@ onMounted(async () => {
     console.error("Error in component:", error);
   }
 });
+
+// ************************************************
 
 const displaySelectedFile = (event) => {
   const fileInput = event.target;

@@ -14,7 +14,7 @@
           <li
             v-for="category in blog.categories"
             :key="category.id"
-            class="text-xs rounded-xl tracking-wider py-2 px-4 flex-wrap font-medium"
+            class="text-xs rounded-[30px] tracking-wider py-2 px-4 flex-wrap font-medium"
             :style="{
               color: category.text_color,
               background: category.background_color,

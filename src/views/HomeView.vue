@@ -49,7 +49,7 @@ onMounted(async () => {
           <li
             v-for="category in categoryData"
             :key="category.id"
-            class="text-xs rounded-xl tracking-wider py-2 px-4 flex-nowrap font-medium border cursor-pointer"
+            class="text-xs rounded-[30px] tracking-wider py-2 px-4 flex-nowrap font-medium border cursor-pointer"
             :class="{
               'border-black': isActive(category.id),
             }"
