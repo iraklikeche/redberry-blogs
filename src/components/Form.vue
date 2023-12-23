@@ -1,4 +1,5 @@
 <template>
+  <SuccessfullyAdded v-if="success" />
   <form class="max-w-[600px] pb-8" @submit.prevent="submitForm">
     <label class="font-bold">ატვირთე ფოტო</label>
     <div
@@ -320,6 +321,7 @@
       >
         გამოქვეყნება
       </button>
+      <button @click="success = true">CLICK ME</button>
     </div>
   </form>
 </template>
@@ -331,10 +333,13 @@ import arrowDown from "../assets/images/arrow-down.png";
 import { ref, onMounted, computed } from "vue";
 import axios from "axios";
 import { fetchData } from "../components/getCategory.js";
+import SuccessfullyAdded from "@/components/SuccessfullyAdded.vue";
 
 const postRequestURL = "https://api.blog.redberryinternship.ge/api/blogs";
 const token =
   "937af957925b8398c6c5e8b103b3578aa1e4edb43b00db8b3acd2e841d0d140d";
+
+const success = ref(false);
 
 // ******************* VALIDATIONS ******************************
 const selectedFile = ref(null);
@@ -355,7 +360,6 @@ const selectedDate = ref("");
 const userSelectedDate = ref(false);
 
 const selectedCategories = ref([]);
-const userSelectedCategory = ref(false);
 const isDropdownOpen = ref(false);
 
 // ********************************************** CATEGORIES DROPDWON **********************************************
@@ -466,9 +470,9 @@ const submitForm = async () => {
         },
       });
 
-      if (response.status === 200) {
-        console.log("Blog post submitted successfully!");
+      if (response.status === 204) {
         // Handle the success case here
+        success.value = true;
       } else {
         console.error("Failed to submit blog post:", response.data);
         // Handle the error case, show an error message to the user, etc.

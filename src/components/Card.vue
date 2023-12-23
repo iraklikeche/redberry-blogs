@@ -5,16 +5,16 @@
         <div>
           <img :src="blog.image" class="rounded-lg w-full h-[328px]" />
         </div>
-        <p class="text-xs font-extrabold mt-4 mb-2">{{ blog.author }}</p>
+        <p class="font-extrabold mt-4 mb-2">{{ blog.author }}</p>
         <p class="text-xs mb-4">{{ blog.publish_date }}</p>
-        <p class="font-bold">
+        <p class="font-bold text-xl">
           {{ blog.title }}
         </p>
         <ul class="my-2 flex gap-4 gap-y-2 flex-wrap">
           <li
             v-for="category in blog.categories"
             :key="category.id"
-            class="text-xs rounded-[30px] tracking-wider py-2 px-4 flex-wrap font-medium"
+            class="text-xs rounded-[30px] tracking-wider py-1.5 px-4 flex-wrap font-medium"
             :style="{
               color: category.text_color,
               background: category.background_color,
