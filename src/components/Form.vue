@@ -1,5 +1,5 @@
 <template>
-  <SuccessfullyAdded v-if="success" />
+  <SuccessfullyAdded v-if="success" @modalClosed="closeSuccess" />
   <form class="max-w-[600px] pb-8" @submit.prevent="submitForm">
     <label class="font-bold">ატვირთე ფოტო</label>
     <div
@@ -321,7 +321,6 @@
       >
         გამოქვეყნება
       </button>
-      <button @click="success = true">CLICK ME</button>
     </div>
   </form>
 </template>
@@ -340,6 +339,9 @@ const token =
   "937af957925b8398c6c5e8b103b3578aa1e4edb43b00db8b3acd2e841d0d140d";
 
 const success = ref(false);
+const closeSuccess = () => {
+  success.value = false;
+};
 
 // ******************* VALIDATIONS ******************************
 const selectedFile = ref(null);

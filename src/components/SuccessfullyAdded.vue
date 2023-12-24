@@ -50,11 +50,19 @@
 <script setup>
 import { ref } from "vue";
 import success from "../assets/images/tick-circle.png";
-
 import close from "../assets/images/close.png";
 import { useRouter } from "vue-router";
 
+const emit = defineEmits(["modalClosed"]);
+
 const modal = ref(true);
+
+const closeModal = () => {
+  modal.value = false;
+  // Emit an event to notify the parent component
+  // that the modal is closed
+  emit("modalClosed");
+};
 
 const router = useRouter();
 
