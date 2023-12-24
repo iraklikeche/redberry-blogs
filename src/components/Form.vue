@@ -329,7 +329,7 @@
 import addIcon from "../assets/images/folder-add.png";
 import imageIcon from "../assets/images/gallery.png";
 import arrowDown from "../assets/images/arrow-down.png";
-import { ref, onMounted, computed } from "vue";
+import { ref, onMounted, computed, watchEffect, onBeforeMount } from "vue";
 import axios from "axios";
 import { fetchData } from "../components/getCategory.js";
 import SuccessfullyAdded from "@/components/SuccessfullyAdded.vue";
@@ -364,7 +364,7 @@ const userSelectedDate = ref(false);
 const selectedCategories = ref([]);
 const isDropdownOpen = ref(false);
 
-// ********************************************** CATEGORIES DROPDWON **********************************************
+// ********************************************** CATEGORIES DROPDOWNN **********************************************
 
 const toggleDropdown = () => {
   isDropdownOpen.value = !isDropdownOpen.value;
@@ -512,15 +512,59 @@ onMounted(async () => {
 });
 
 // ************************************************
+const fileToBase64 = (file) => {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(reader.result.split(",")[1]);
+    reader.onerror = (error) => reject(error);
+    reader.readAsDataURL(file);
+  });
+};
 
-const displaySelectedFile = (event) => {
+const displaySelectedFile = async (event) => {
   const fileInput = event.target;
   if (fileInput.files.length > 0) {
     selectedFile.value = fileInput.files[0];
+    const base64Data = await fileToBase64(selectedFile.value);
+    updateLocalStorage(base64Data);
   }
+};
+
+const updateLocalStorage = (fileData) => {
+  const data = {
+    selectedFile: fileData,
+    authorName: authorName.value,
+    title: title.value,
+    description: description.value,
+    email: email.value,
+    selectedDate: selectedDate.value,
+    selectedCategories: selectedCategories.value,
+  };
+  localStorage.setItem("localStorageKey", JSON.stringify(data));
 };
 
 const removePhoto = () => {
   selectedFile.value = null;
 };
+
+// ******* PERSIST DATA *******
+
+const savedData = JSON.parse(localStorage.getItem("localStorageKey"));
+if (savedData) {
+  selectedFile.value = savedData.selectedFile;
+  authorName.value = savedData.authorName;
+  title.value = savedData.title;
+  description.value = savedData.description;
+  email.value = savedData.email;
+  selectedDate.value = savedData.selectedDate;
+  selectedCategories.value = savedData.selectedCategories;
+}
+console.log(savedData);
+
+watchEffect(() => {
+  // Update localStorage whenever form values change
+  updateLocalStorage(selectedFile.value);
+});
+
+// *****************************************************************************
 </script>
