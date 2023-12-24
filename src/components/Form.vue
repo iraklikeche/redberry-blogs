@@ -182,7 +182,7 @@
 
         <div class="custom-dropdown">
           <div
-            class="selected-option bg-[#e4e3eb] px-2 py-[9px] rounded-xl w-full mt-1 cursor-pointer outline-[#5d37f3] border outline-[1.5px] text-[#85858d] whitespace-nowrap overflow-hidden"
+            class="selected-option bg-[#e4e3eb] px-2 py-[9px] rounded-xl w-full mt-1 border-2 cursor-pointer text-[#85858d] whitespace-nowrap overflow-hidden"
             :style="{
               background: selectedCategories
                 ? selectedCategories.background_color
@@ -190,8 +190,11 @@
               color: selectedCategories
                 ? selectedCategories.text_color
                 : '#85858d',
+              borderColor: isFocused ? '#5d37f3' : '',
             }"
             @click="toggleDropdown"
+            @blur="handleBlur"
+            tabindex="0"
           >
             <span
               v-for="selectedCat in selectedCategories"
@@ -329,7 +332,7 @@
 import addIcon from "../assets/images/folder-add.png";
 import imageIcon from "../assets/images/gallery.png";
 import arrowDown from "../assets/images/arrow-down.png";
-import { ref, onMounted, computed, watchEffect, onBeforeMount } from "vue";
+import { ref, onMounted, computed, watchEffect, watch } from "vue";
 import axios from "axios";
 import { fetchData } from "../components/getCategory.js";
 import SuccessfullyAdded from "@/components/SuccessfullyAdded.vue";
@@ -344,6 +347,9 @@ const closeSuccess = () => {
 };
 
 // ******************* VALIDATIONS ******************************
+
+const isFocused = ref(false);
+
 const selectedFile = ref(null);
 
 const authorName = ref("");
@@ -367,7 +373,13 @@ const isDropdownOpen = ref(false);
 // ********************************************** CATEGORIES DROPDOWNN **********************************************
 
 const toggleDropdown = () => {
+  isFocused.value = !isFocused.value;
   isDropdownOpen.value = !isDropdownOpen.value;
+};
+
+const handleBlur = () => {
+  isFocused.value = false;
+  isDropdownOpen.value = false;
 };
 
 const selectCategory = (category) => {
