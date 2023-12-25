@@ -51,20 +51,19 @@ import Card from "@/components/Card.vue";
 import { useRoute, useRouter } from "vue-router";
 import Navbar from "@/components/Navbar.vue";
 import arrowLeft from "../assets/images/Arrow-left.png";
-import { onMounted, ref } from "vue";
+import { onMounted, ref, watch } from "vue";
 import axios from "axios";
 
 const route = useRoute();
 
-const id = route.params.id;
+const id = ref(route.params.id);
 const singleBlog = ref([]);
 console.log(id);
 
-const apiUrl = "https://api.blog.redberryinternship.ge/api/blogs";
 const token =
   "937af957925b8398c6c5e8b103b3578aa1e4edb43b00db8b3acd2e841d0d140d";
 
-const getById = `https://api.blog.redberryinternship.ge/api/blogs/${id}`;
+let getById = `https://api.blog.redberryinternship.ge/api/blogs/${id.value}`;
 console.log(getById);
 
 const router = useRouter();
@@ -74,7 +73,7 @@ const goToHomePage = () => {
   router.push({ name: "home" });
 };
 
-onMounted(async () => {
+const fetchData = async () => {
   try {
     const response = await axios.get(getById, {
       headers: {
@@ -84,20 +83,35 @@ onMounted(async () => {
     });
     console.log(response.data);
     singleBlog.value = response.data;
+    window.scrollTo({ top: 0, behavior: "smooth" });
   } catch (error) {
     console.error(error);
   }
-});
+};
+
+onMounted(fetchData);
+
+// Watch for changes in the route parameters
+watch(
+  () => route.params.id,
+  (newId) => {
+    // Update the id and fetch data when the id changes
+    id.value = newId;
+    getById = `https://api.blog.redberryinternship.ge/api/blogs/${id.value}`;
+    fetchData();
+  }
+);
 
 // onMounted(async () => {
 //   try {
-//     const response = await axios.get(apiUrl, {
+//     const response = await axios.get(getById, {
 //       headers: {
 //         Authorization: `Bearer ${token}`,
 //         "Content-Type": "application/json",
 //       },
 //     });
-//     // console.log(response.data);
+//     console.log(response.data);
+//     singleBlog.value = response.data;
 //   } catch (error) {
 //     console.error(error);
 //   }

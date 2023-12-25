@@ -30,7 +30,7 @@
         <img :src="imageIcon" />
 
         <p>
-          {{ selectedFile.name }}
+          {{ selectedFileName }}
         </p>
       </div>
       <svg
@@ -180,9 +180,18 @@
       <div class="relative">
         <label class="font-bold">კატეგორია *</label>
 
-        <div class="custom-dropdown">
+        <div
+          class="custom-dropdown"
+          @blur="handleBlur"
+          @click="toggleDropdown"
+          tabindex="0"
+        >
           <div
-            class="selected-option bg-[#e4e3eb] px-2 py-[9px] rounded-xl w-full mt-1 border-2 cursor-pointer text-[#85858d] whitespace-nowrap overflow-hidden"
+            class="selected-option bg-[#e4e3eb] px-2 py-[8px] rounded-xl w-full mt-1 border-2 cursor-pointer text-[#85858d] whitespace-nowrap overflow-hidden"
+            :class="{
+              'border-[#14d81c] border-1':
+                selectedCategories.length > 0 && !isFocused,
+            }"
             :style="{
               background: selectedCategories
                 ? selectedCategories.background_color
@@ -190,16 +199,13 @@
               color: selectedCategories
                 ? selectedCategories.text_color
                 : '#85858d',
-              borderColor: isFocused ? '#5d37f3' : '',
+              borderColor: isFocused ? ' #5d37f3' : '',
             }"
-            @click="toggleDropdown"
-            @blur="handleBlur"
-            tabindex="0"
           >
             <span
               v-for="selectedCat in selectedCategories"
               :key="selectedCat.id"
-              class="text-xs rounded-[30px] tracking-wider py-2 px-4 pr-2 font-medium border cursor-pointer mr-2 last:mr-0 relative z-10"
+              class="text-xs rounded-[30px] tracking-wider py-2 px-4 pr-2 font-medium cursor-pointer mr-2 last:mr-0 relative z-10"
               :style="{
                 background: selectedCat.background_color,
                 color: selectedCat.text_color,
@@ -318,9 +324,9 @@
       <button
         class="bg-[#5D37F3] py-2 w-[284px] text-white rounded-lg"
         :class="{
-          'opacity-50': isFormInvalid,
+          'opacity-50': isFormInvalidRef,
         }"
-        :disabled="isFormInvalid"
+        :disabled="isFormInvalidRef"
       >
         გამოქვეყნება
       </button>
@@ -351,6 +357,7 @@ const closeSuccess = () => {
 const isFocused = ref(false);
 
 const selectedFile = ref(null);
+const selectedFileName = ref(null);
 
 const authorName = ref("");
 const typingAuthor = ref(false);
@@ -368,18 +375,24 @@ const selectedDate = ref("");
 const userSelectedDate = ref(false);
 
 const selectedCategories = ref([]);
+const userSelectedCategories = ref(false);
+
 const isDropdownOpen = ref(false);
 
-// ********************************************** CATEGORIES DROPDOWNN **********************************************
+const isFormInvalidRef = ref(null);
+
+// ********************************************** CATEGORIES DROPDOWN **********************************************
 
 const toggleDropdown = () => {
-  isFocused.value = !isFocused.value;
+  isFocused.value = true;
   isDropdownOpen.value = !isDropdownOpen.value;
+  userSelectedCategories.value = true;
 };
 
 const handleBlur = () => {
   isFocused.value = false;
   isDropdownOpen.value = false;
+  userSelectedCategories.value = false;
 };
 
 const selectCategory = (category) => {
@@ -446,6 +459,36 @@ const isFormInvalid = computed(() => {
     !userSelectedDate.value ||
     !selectedCategories.value.length > 0
   );
+});
+
+// watchEffect(isFormInvalid, (newValue, oldValue) => {
+//   // console.log(`isFocused changed from ${oldValue} to ${newValue}`);
+//   console.log(isFormInvalidRef.value);
+//   isFormInvalidRef.value =
+//     !selectedFile.value ||
+//     isInputInvalid.value ||
+//     isTitleInvalid.value ||
+//     isDescInvalid.value ||
+//     !userSelectedDate.value ||
+//     !selectedCategories.value.length > 0;
+// });
+
+watchEffect(() => {
+  console.log(
+    !selectedFile.value,
+    isInputInvalid.value,
+    isTitleInvalid.value,
+    isDescInvalid.value,
+    !userSelectedDate.value,
+    !selectedCategories.value.length > 0
+  );
+  isFormInvalidRef.value =
+    !selectedFile.value ||
+    isInputInvalid.value ||
+    isTitleInvalid.value ||
+    isDescInvalid.value ||
+    // !userSelectedDate.value ||
+    !selectedCategories.value.length > 0;
 });
 
 // **************************************************************************
@@ -537,6 +580,7 @@ const displaySelectedFile = async (event) => {
   const fileInput = event.target;
   if (fileInput.files.length > 0) {
     selectedFile.value = fileInput.files[0];
+    selectedFileName.value = fileInput.files[0].name;
     const base64Data = await fileToBase64(selectedFile.value);
     updateLocalStorage(base64Data);
   }
@@ -545,12 +589,14 @@ const displaySelectedFile = async (event) => {
 const updateLocalStorage = (fileData) => {
   const data = {
     selectedFile: fileData,
+    selectedFileName: selectedFileName.value,
     authorName: authorName.value,
     title: title.value,
     description: description.value,
     email: email.value,
     selectedDate: selectedDate.value,
     selectedCategories: selectedCategories.value,
+    isFormInvalid: isFormInvalidRef.value,
   };
   localStorage.setItem("localStorageKey", JSON.stringify(data));
 };
@@ -564,12 +610,14 @@ const removePhoto = () => {
 const savedData = JSON.parse(localStorage.getItem("localStorageKey"));
 if (savedData) {
   selectedFile.value = savedData.selectedFile;
+  selectedFileName.value = savedData.selectedFileName;
   authorName.value = savedData.authorName;
   title.value = savedData.title;
   description.value = savedData.description;
   email.value = savedData.email;
   selectedDate.value = savedData.selectedDate;
   selectedCategories.value = savedData.selectedCategories;
+  // isFormInvalidRef.value = savedData.isFormInvalid;
 }
 console.log(savedData);
 
