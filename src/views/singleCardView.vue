@@ -5,8 +5,14 @@
       <div>
         <img :src="arrowLeft" class="cursor-pointer" @click="goToHomePage" />
       </div>
-      <div class="grid grid-cols-1 max-w-2xl">
-        <img :src="singleBlog.image" class="rounded-lg" />
+      <div class="grid grid-cols-1 max-w-3xl">
+        <img
+          :src="singleBlog.image"
+          class="rounded-xl w-full"
+          :style="{
+            height: `${(368 / 1080) * 100}vh`,
+          }"
+        />
         <p class="text-xs font-extrabold mt-8 mb-2">{{ singleBlog.author }}</p>
         <p class="text-xs mb-4 text-[#85858D]">
           {{ singleBlog.publish_date }}

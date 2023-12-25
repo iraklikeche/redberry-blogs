@@ -3,7 +3,7 @@
     <div v-for="blog in filteredBlogs" :key="blog.id">
       <div class="flex flex-col">
         <div>
-          <img :src="blog.image" class="rounded-lg w-full h-[328px]" />
+          <img :src="blog.image" class="rounded-xl w-full h-[328px]" />
         </div>
         <p class="font-extrabold mt-4 mb-2">{{ blog.author }}</p>
         <p class="text-xs mb-4">{{ blog.publish_date }}</p>
