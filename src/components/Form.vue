@@ -330,6 +330,7 @@
       >
         გამოქვეყნება
       </button>
+      <button @click="resetForm">RESET</button>
     </div>
   </form>
 </template>
@@ -380,6 +381,16 @@ const userSelectedCategories = ref(false);
 const isDropdownOpen = ref(false);
 
 const isFormInvalidRef = ref(null);
+
+const resetForm = () => {
+  (selectedFile.value = null),
+    (authorName.value = ""),
+    (title.value = ""),
+    (description.value = ""),
+    (email.value = ""),
+    (selectedDate.value = ""),
+    (selectedCategories.value = []);
+};
 
 // ********************************************** CATEGORIES DROPDOWN **********************************************
 
@@ -450,28 +461,19 @@ const isEmailInvalid = computed(() => {
   return typingEmail && email.value.indexOf("@redberry.ge") <= 0;
 });
 
+console.log(isEmailInvalid.value);
+
 const isFormInvalid = computed(() => {
   return (
     !selectedFile.value ||
     isInputInvalid.value ||
     isTitleInvalid.value ||
     isDescInvalid.value ||
+    !isEmailInvalid.value ||
     !userSelectedDate.value ||
     !selectedCategories.value.length > 0
   );
 });
-
-// watchEffect(isFormInvalid, (newValue, oldValue) => {
-//   // console.log(`isFocused changed from ${oldValue} to ${newValue}`);
-//   console.log(isFormInvalidRef.value);
-//   isFormInvalidRef.value =
-//     !selectedFile.value ||
-//     isInputInvalid.value ||
-//     isTitleInvalid.value ||
-//     isDescInvalid.value ||
-//     !userSelectedDate.value ||
-//     !selectedCategories.value.length > 0;
-// });
 
 watchEffect(() => {
   console.log(
@@ -511,10 +513,6 @@ const submitForm = async () => {
         (category) => category.id
       );
       formData.append("categories", JSON.stringify(categoryIdsArray));
-
-      // const categoryIdsString = selectedCategories.value
-      //   .map((category) => category.id)
-      //   .join(",");
 
       formData.append("image", selectedFile.value);
 

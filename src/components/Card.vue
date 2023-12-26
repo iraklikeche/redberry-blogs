@@ -7,7 +7,7 @@
         </div>
         <p class="font-extrabold mt-4 mb-2">{{ blog.author }}</p>
         <p class="text-xs mb-4">{{ blog.publish_date }}</p>
-        <p class="font-bold text-xl">
+        <p class="font-bold text-xl line-clamp-2">
           {{ blog.title }}
         </p>
         <ul class="my-2 flex gap-4 gap-y-2 flex-wrap">

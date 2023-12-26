@@ -42,7 +42,7 @@
           <img
             :src="close"
             class="absolute top-[5%] right-[5%] cursor-pointer"
-            @click="closeModal"
+            @click="goToHomePage"
           />
 
           <div class="bg-gray-50 px-8 py-12" v-if="!isLogged">
@@ -109,7 +109,7 @@
 
             <button
               type="button"
-              @click="closeModal"
+              @click="goToHomePage"
               class="bg-[#5D37F3] py-2 w-full text-white rounded-lg"
             >
               კარგი
@@ -127,7 +127,7 @@ import logo from "../assets/images/logo.png";
 import close from "../assets/images/close.png";
 import axios from "axios";
 import success from "../assets/images/tick-circle.png";
-import { RouterLink } from "vue-router";
+import { RouterLink, useRouter } from "vue-router";
 
 const token =
   "937af957925b8398c6c5e8b103b3578aa1e4edb43b00db8b3acd2e841d0d140d";
@@ -190,6 +190,13 @@ const login = async () => {
     // Handle errors here
     console.error("Error:", error);
   }
+};
+
+const router = useRouter();
+
+const goToHomePage = () => {
+  // Use router.go(-1) to navigate back one step in the history.
+  router.push({ name: "home" });
 };
 </script>
 
