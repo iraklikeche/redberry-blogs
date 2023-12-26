@@ -2,7 +2,7 @@
 import blog from "../assets/images/blog.png";
 import Navbar from "@/components/Navbar.vue";
 import { ref, onMounted } from "vue";
-import Card from "@/components/Card.vue";
+import CardSlider from "@/components/CardSlider.vue";
 import { fetchData } from "../components/getCategory.js";
 
 const categoryData = ref([]);
@@ -63,7 +63,7 @@ onMounted(async () => {
           </li>
         </ul>
       </div>
-      <Card :activeCategories="activeCategories" />
+      <CardSlider :activeCategories="activeCategories" />
     </div>
   </main>
 </template>

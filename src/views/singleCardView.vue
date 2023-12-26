@@ -94,19 +94,19 @@
         </div>
       </div>
       <div>
-        <Card :similarBlog="similarBlog" :currentBlogId="currentBlogId" />
+        <CardSlider :similarBlog="similarBlog" :currentBlogId="currentBlogId" />
       </div>
     </div>
   </div>
 </template>
 
 <script setup>
-import Card from "@/components/Card.vue";
 import { useRoute, useRouter } from "vue-router";
 import Navbar from "@/components/Navbar.vue";
 import arrowLeft from "../assets/images/Arrow-left.png";
 import { onMounted, ref, watch, computed } from "vue";
 import axios from "axios";
+import CardSlider from "@/components/CardSlider.vue";
 
 const route = useRoute();
 
