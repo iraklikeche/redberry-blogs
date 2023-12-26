@@ -7,10 +7,18 @@
         :modules="modules"
         class="mySwiper"
       >
+        <div class="mt-12 pt-12">
+          <div class="flex items-center justify-between mb-6">
+            <h2 class="text-2xl font-black">მსგავსი სტატიები</h2>
+            <div class="flex justify-center items-center gap-4">
+              <SliderButton />
+            </div>
+          </div>
+        </div>
+
         <swiper-slide v-for="blog in filteredBlogs" :key="blog.id">
           <Card :blog="blog" />
         </swiper-slide>
-        <SliderButton />
       </swiper>
     </div>
 
