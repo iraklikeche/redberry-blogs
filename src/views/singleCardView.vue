@@ -47,7 +47,7 @@
           <button>2</button>
         </div>
       </div>
-      <Card />
+      <Card :similarBlog="similarBlog" :currentBlogId="currentBlogId" />
     </div>
   </div>
 </template>
@@ -57,20 +57,20 @@ import Card from "@/components/Card.vue";
 import { useRoute, useRouter } from "vue-router";
 import Navbar from "@/components/Navbar.vue";
 import arrowLeft from "../assets/images/Arrow-left.png";
-import { onMounted, ref, watch } from "vue";
+import { onMounted, ref, watch, computed } from "vue";
 import axios from "axios";
 
 const route = useRoute();
 
 const id = ref(route.params.id);
 const singleBlog = ref([]);
-console.log(id);
+const similarBlog = ref([]);
+const currentBlogId = ref(id.value);
 
 const token =
   "937af957925b8398c6c5e8b103b3578aa1e4edb43b00db8b3acd2e841d0d140d";
 
 let getById = `https://api.blog.redberryinternship.ge/api/blogs/${id.value}`;
-console.log(getById);
 
 const router = useRouter();
 
@@ -87,8 +87,15 @@ const fetchData = async () => {
         "Content-Type": "application/json",
       },
     });
-    console.log(response.data);
+    // console.log(response.data);
     singleBlog.value = response.data;
+    similarBlog.value = response.data.categories;
+
+    similarBlog.value = similarBlog.value.map((item) => item.id);
+    currentBlogId.value = response.data.id;
+    console.log(currentBlogId.value);
+
+    // console.log(similarBlog.value);
     window.scrollTo({ top: 0, behavior: "smooth" });
   } catch (error) {
     console.error(error);
@@ -107,19 +114,4 @@ watch(
     fetchData();
   }
 );
-
-// onMounted(async () => {
-//   try {
-//     const response = await axios.get(getById, {
-//       headers: {
-//         Authorization: `Bearer ${token}`,
-//         "Content-Type": "application/json",
-//       },
-//     });
-//     console.log(response.data);
-//     singleBlog.value = response.data;
-//   } catch (error) {
-//     console.error(error);
-//   }
-// });
 </script>

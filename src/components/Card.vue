@@ -57,25 +57,36 @@ onMounted(async () => {
       },
     });
 
-    console.log(response.data.data);
     blogs.value = response.data.data;
   } catch (error) {
     console.error(error);
   }
 });
 
-const props = defineProps(["activeCategories"]);
+const props = defineProps(["activeCategories", "similarBlog", "currentBlogId"]);
 
 const filteredBlogs = computed(() => {
-  if (!props.activeCategories || props.activeCategories.length === 0) {
-    return blogs.value;
+  if (props.activeCategories && props.activeCategories.length > 0) {
+    // Filtering for Home page using activeCategories
+    return blogs.value.filter((blog) =>
+      blog.categories.some((category) =>
+        props.activeCategories.includes(category.id)
+      )
+    );
   }
 
-  return blogs.value.filter((blog) => {
-    return blog.categories.some((category) =>
-      props.activeCategories.includes(category.id)
-    );
-  });
+  if (props.similarBlog && props.similarBlog.length > 0) {
+    // Filtering for SingleCard page using similarBlog
+    return blogs.value.filter((blog) => {
+      return (
+        blog.categories.some((category) =>
+          props.similarBlog.includes(category.id)
+        ) && blog.id !== props.currentBlogId
+      );
+    });
+  }
+
+  return blogs.value;
 });
 </script>
 

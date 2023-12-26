@@ -3,7 +3,9 @@
     <div
       class="divide-y flex items-center justify-center flex-col border-b border-[#e4e3eb] py-8"
     >
-      <img :src="logo" />
+      <RouterLink :to="{ name: 'home' }">
+        <img :src="logo" />
+      </RouterLink>
     </div>
     <div class="px-20 grid grid-cols-[25%,75%] items-center py-8">
       <div class="self-start">

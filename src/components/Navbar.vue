@@ -1,8 +1,10 @@
 <template>
   <nav
-    class="divide-y flex justify-between px-20 border-b border-[#e4e3eb] py-4"
+    class="divide-y flex justify-between px-20 items-center border-b border-[#e4e3eb] py-6"
   >
-    <img :src="logo" class="w-[150px] h-6" />
+    <RouterLink :to="{ name: 'home' }">
+      <img :src="logo" class="w-[150px] h-6" />
+    </RouterLink>
     <button
       class="bg-[#5D37F3] px-4 py-2 text-white rounded-lg text-sm"
       @click="openModal"
