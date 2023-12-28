@@ -52,7 +52,7 @@
             <div class="flex flex-col gap-2 mb-6">
               <label class="font-bold text-sm">ელ-ფოსტა</label>
               <input
-                type="text"
+                type="email"
                 placeholder="Example@redberry.ge"
                 v-model="email"
                 required
@@ -197,6 +197,7 @@ const router = useRouter();
 const goToHomePage = () => {
   // Use router.go(-1) to navigate back one step in the history.
   router.push({ name: "home" });
+  modal.value = false;
 };
 </script>
 

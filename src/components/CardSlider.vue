@@ -1,8 +1,8 @@
 <template>
   <div>
-    <div v-if="isSingleCardPage">
-      <div class="mt-12 pt-12">
-        <div class="flex items-center justify-between mb-6">
+    <div v-if="isSingleCardPage" class="pb-20">
+      <div class="mt-12 mb-8">
+        <div class="flex items-center justify-between">
           <h2 class="text-2xl font-black">მსგავსი სტატიები</h2>
           <div class="flex justify-center items-center gap-4">
             <button

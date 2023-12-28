@@ -48,7 +48,7 @@
 import { useRoute, useRouter } from "vue-router";
 import Navbar from "@/components/Navbar.vue";
 import arrowLeft from "../assets/images/Arrow-left.png";
-import { onMounted, ref, watch, computed } from "vue";
+import { onMounted, ref, watch } from "vue";
 import axios from "axios";
 import CardSlider from "@/components/CardSlider.vue";
 
@@ -79,7 +79,7 @@ const fetchData = async () => {
         "Content-Type": "application/json",
       },
     });
-    // console.log(response.data);
+
     singleBlog.value = response.data;
     similarBlog.value = response.data.categories;
 
@@ -87,7 +87,6 @@ const fetchData = async () => {
     currentBlogId.value = response.data.id;
     console.log(currentBlogId.value);
 
-    // console.log(similarBlog.value);
     window.scrollTo({ top: 0, behavior: "smooth" });
   } catch (error) {
     console.error(error);

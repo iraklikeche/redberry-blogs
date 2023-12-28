@@ -1,7 +1,10 @@
 <template>
-  <div class="flex flex-col">
-    <div>
-      <img :src="blog.image" class="rounded-xl w-full h-[328px]" />
+  <div class="flex flex-col" v-if="isPublishDatePassed">
+    <div
+      v-bind:style="{ backgroundImage: 'url(' + blog.image + ')' }"
+      class="cardImageHolder"
+    >
+      <!-- <img :src="blog.image" class="rounded-xl w-full h-[328px]" /> -->
     </div>
     <p class="font-extrabold mt-4 mb-2">{{ blog.author }}</p>
     <p class="text-xs mb-4">{{ blog.publish_date }}</p>
@@ -36,6 +39,24 @@
 
 <script setup>
 const props = defineProps(["blog"]);
+import { computed } from "vue";
+
+const isPublishDatePassed = computed(() => {
+  const publishDate = new Date(props.blog.publish_date);
+  const currentDate = new Date();
+  console.log("current Date::", currentDate, "Publish Date:", publishDate);
+  return publishDate <= currentDate;
+});
 </script>
 
-<style scoped></style>
+<style scoped>
+.cardImageHolder {
+  width: 100%;
+  /* height: 328px; */
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover;
+  border-radius: 12px;
+  aspect-ratio: auto 16/9;
+}
+</style>

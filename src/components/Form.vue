@@ -3,7 +3,7 @@
   <form class="max-w-[600px] pb-8" @submit.prevent="submitForm">
     <label class="font-bold">ატვირთე ფოტო</label>
     <div
-      v-if="!selectedFile"
+      v-if="!form.image"
       class="image-container relative mt-2 border-dashed border border-[#85858d] rounded-xl py-12 flex flex-col items-center justify-center"
     >
       <img :src="addIcon" class="mb-4" />
@@ -65,14 +65,14 @@
         <label class="font-bold">ავტორი *</label>
         <div class="mt-1">
           <input
-            v-model="authorName"
+            v-model="form.author"
             @input="typingAuthor = true"
             type="text"
             placeholder="შეიყვანეთ ავტორი"
             class="bg-[#e4e3eb] px-4 py-2 rounded-xl w-full outline-[#5d37f3] border outline-[1.5px]"
             :class="{
-              'border-[#ea1919] border': isInputInvalid & typingAuthor,
-              'border-[#14d81c] border': !isInputInvalid & typingAuthor,
+              'border-[#ea1919] border': !isFieldValid.author() && typingAuthor,
+              'border-[#14d81c] border': isFieldValid.author() && typingAuthor,
             }"
           />
           <ul
@@ -80,8 +80,8 @@
           >
             <li
               :class="{
-                'text-green-500': typingAuthor && authorName.length >= 4,
-                'text-red-500': typingAuthor && authorName.length < 4,
+                'text-green-500': typingAuthor && form.author.length >= 4,
+                'text-red-500': typingAuthor && form.author.length < 4,
               }"
             >
               მინიმუმ 4 სიმბოლო
@@ -89,9 +89,9 @@
             <li
               :class="{
                 'text-green-500':
-                  typingAuthor && authorName.trim().split(/\s+/).length >= 2,
+                  typingAuthor && form.author.trim().split(/\s+/).length >= 2,
                 'text-red-500':
-                  typingAuthor && authorName.trim().split(/\s+/).length < 2,
+                  typingAuthor && form.author.trim().split(/\s+/).length < 2,
               }"
             >
               მინიმუმ 2 სიტყვა
@@ -111,21 +111,21 @@
         <label class="font-bold">სათაური *</label>
         <div class="mt-1">
           <input
-            v-model="title"
+            v-model="form.title"
             type="text"
             @input="typingTitle = true"
             placeholder="შეიყვანეთ სათაური"
             class="bg-[#e4e3eb] px-4 py-2 rounded-xl w-full outline-[#5d37f3] border outline-[1.5px]"
             :class="{
-              'border-[#ea1919] border': isTitleInvalid & typingTitle,
-              'border-[#14d81c] border': !isTitleInvalid & typingTitle,
+              'border-[#ea1919] border': !isFieldValid.title() & typingTitle,
+              'border-[#14d81c] border': isFieldValid.title() & typingTitle,
             }"
           />
           <ul class="text-[#85858d] text-xs mt-2">
             <li
               :class="{
-                'text-green-500': typingTitle && title.length >= 2,
-                'text-red-500': typingTitle && title.length < 2,
+                'text-green-500': typingTitle && form.title.length >= 2,
+                'text-red-500': typingTitle && form.title.length < 2,
               }"
             >
               მინიმუმ 2 სიმბოლო
@@ -139,10 +139,10 @@
     <div class="mt-6">
       <label class="font-bold">აღწერა *</label>
       <textarea
-        v-model="description"
+        v-model="form.description"
         :class="{
-          'border-[#ea1919] border': isDescInvalid & typingDesc,
-          'border-[#14d81c] border': !isDescInvalid & typingDesc,
+          'border-[#ea1919] border': !isFieldValid.description() & typingDesc,
+          'border-[#14d81c] border': isFieldValid.description() & typingDesc,
         }"
         class="bg-[#e4e3eb] mt-1 w-full py-2 px-4 rounded-xl resize-none outline-[#5d37f3] border outline-[1.5px]"
         @input="typingDesc = true"
@@ -152,8 +152,8 @@
       <p
         class="text-[#85858d] text-xs mt-1"
         :class="{
-          'text-green-500': typingDesc && description.length >= 2,
-          'text-red-500': typingDesc && description.length < 2,
+          'text-green-500': typingDesc && form.description.length >= 2,
+          'text-red-500': typingDesc && form.description.length < 2,
         }"
       >
         მინიმუმ 2 სიმბოლო
@@ -166,14 +166,15 @@
       <div class="relative">
         <label class="font-bold">გამოქვეყნების თარიღი *</label>
         <input
-          v-model="selectedDate"
+          v-model="form.publish_date"
           @input="userSelectedDate = true"
           type="date"
           placeholder="Select a date"
           value="2023-01-01"
           class="bg-[#e4e3eb] px-4 py-2 rounded-xl w-full mt-1 outline-[#5d37f3] border outline-[1.5px]"
           :class="{
-            'border-[#14d81c] border': userSelectedDate && selectedDate,
+            'border-[#14d81c] border':
+              userSelectedDate && !isFieldValid.publish_date(),
           }"
         />
       </div>
@@ -190,20 +191,18 @@
             class="selected-option bg-[#e4e3eb] px-2 py-[8px] rounded-xl w-full mt-1 border-2 cursor-pointer text-[#85858d] whitespace-nowrap overflow-hidden"
             :class="{
               'border-[#14d81c] border-1':
-                selectedCategories.length > 0 && !isFocused,
+                form.categories.length > 0 && !isFocused,
             }"
             :style="{
-              background: selectedCategories
-                ? selectedCategories.background_color
+              background: form.categories
+                ? form.categories.background_color
                 : '#e4e3eb',
-              color: selectedCategories
-                ? selectedCategories.text_color
-                : '#85858d',
+              color: form.categories ? form.categories.text_color : '#85858d',
               borderColor: isFocused ? ' #5d37f3' : '',
             }"
           >
             <span
-              v-for="selectedCat in selectedCategories"
+              v-for="selectedCat in form.categories"
               :key="selectedCat.id"
               class="text-xs rounded-[30px] tracking-wider py-2 px-4 pr-2 font-medium cursor-pointer mr-2 last:mr-0 relative z-10"
               :style="{
@@ -241,9 +240,7 @@
               </span>
             </span>
 
-            <span v-if="selectedCategories.length === 0">
-              აირჩიეთ კატეგორია
-            </span>
+            <span v-if="form.categories.length === 0"> აირჩიეთ კატეგორია </span>
           </div>
 
           <div
@@ -275,17 +272,17 @@
       <div class="mt-2">
         <label class="font-bold">ელ-ფოსტა</label>
         <input
-          v-model="email"
+          v-model="form.email"
           type="email"
           placeholder="example@redberry.ge"
           @input="typingEmail = true"
           class="bg-[#e4e3eb] px-4 py-2 rounded-xl w-full mt-1 outline-[#5d37f3] border outline-[1.5px]"
           :class="{
-            'border-[#ea1919] border': isEmailInvalid && typingEmail,
-            'border-[#14d81c] border': !isEmailInvalid && typingEmail,
+            'border-[#ea1919] border': !isFieldValid.email() && typingEmail,
+            'border-[#14d81c] border': isFieldValid.email() && typingEmail,
           }"
         />
-        <ul v-if="typingEmail && isEmailInvalid">
+        <ul v-if="typingEmail && !isFieldValid.email()">
           <li class="flex gap-2 mt-2">
             <svg
               width="20"
@@ -324,13 +321,12 @@
       <button
         class="bg-[#5D37F3] py-2 w-[284px] text-white rounded-lg"
         :class="{
-          'opacity-50': isFormInvalidRef,
+          'opacity-50': !isFormValidRef,
         }"
-        :disabled="isFormInvalidRef"
+        :disabled="!isFormValidRef"
       >
         გამოქვეყნება
       </button>
-      <button @click="resetForm">RESET</button>
     </div>
   </form>
 </template>
@@ -343,6 +339,19 @@ import { ref, onMounted, computed, watchEffect, watch } from "vue";
 import axios from "axios";
 import { fetchData } from "../components/getCategory.js";
 import SuccessfullyAdded from "@/components/SuccessfullyAdded.vue";
+import { storeToRefs } from "pinia";
+import { useFormStore } from "../stores/formStore.js";
+const store = useFormStore();
+const { detect } = store;
+const { form, isFieldValid } = storeToRefs(store);
+
+watch(
+  store,
+  () => {
+    localStorage.setItem("form", JSON.stringify(form.value));
+  },
+  { deep: true }
+);
 
 const postRequestURL = "https://api.blog.redberryinternship.ge/api/blogs";
 const token =
@@ -356,41 +365,26 @@ const closeSuccess = () => {
 // ******************* VALIDATIONS ******************************
 
 const isFocused = ref(false);
-
-const selectedFile = ref(null);
 const selectedFileName = ref(null);
 
-const authorName = ref("");
 const typingAuthor = ref(false);
-
-const title = ref("");
 const typingTitle = ref(false);
-
-const description = ref("");
 const typingDesc = ref(false);
-
-const email = ref("");
 const typingEmail = ref(false);
 
-const selectedDate = ref("");
 const userSelectedDate = ref(false);
-
-const selectedCategories = ref([]);
 const userSelectedCategories = ref(false);
 
 const isDropdownOpen = ref(false);
 
-const isFormInvalidRef = ref(null);
-
 const resetForm = () => {
-  (selectedFile.value = null),
-    (authorName.value = ""),
-    (title.value = ""),
-    (description.value = ""),
-    (email.value = ""),
-    (selectedDate.value = ""),
-    (selectedCategories.value = []);
+  localStorage.removeItem("form");
+  detect();
 };
+
+const isFormValidRef = computed(() => {
+  return isFieldValid.value.all();
+});
 
 // ********************************************** CATEGORIES DROPDOWN **********************************************
 
@@ -407,22 +401,17 @@ const handleBlur = () => {
 };
 
 const selectCategory = (category) => {
-  // Check if the category is not already selected
   if (
-    !selectedCategories.value.some(
-      (selectedCat) => selectedCat.id === category.id
-    )
+    !form.value.categories.some((selectedCat) => selectedCat.id === category.id)
   ) {
-    // Push the category to selectedCategories without modifying the title
-    selectedCategories.value.push(category);
+    form.value.categories.push(category);
   }
   isDropdownOpen.value = false;
 };
 
 const removeSelectedCategory = (event, selectedCat) => {
-  console.log(1);
   event.stopPropagation();
-  selectedCategories.value = selectedCategories.value.filter(
+  form.value.categories = form.value.categories.filter(
     (cat) => cat.id !== selectedCat.id
   );
 };
@@ -431,128 +420,46 @@ const removeSelectedCategory = (event, selectedCat) => {
 
 const isGeorgianLetters = computed(() => {
   const georgianLettersRegex = /^[\u10A0-\u10FF\s]+$/;
-  return typingAuthor && georgianLettersRegex.test(authorName.value);
+  return typingAuthor && georgianLettersRegex.test(form.value.author);
 });
 
-// **************************AUTHOR**************************
-
-const isInputInvalid = computed(() => {
-  const georgianLettersRegex = /^[\u10A0-\u10FF\s]+$/;
-  const words = authorName.value.trim().split(/\s+/);
-  return (
-    authorName.value.length < 4 ||
-    words.length < 2 ||
-    !georgianLettersRegex.test(authorName.value)
-  );
-});
-
-// ************************ TITLE **************************
-const isTitleInvalid = computed(() => {
-  return typingTitle && title.value.length < 2;
-});
-
-// ************************ Description **************************
-const isDescInvalid = computed(() => {
-  return typingDesc && description.value.length < 2;
-});
-
-// ************************ EMAIL **************************
-const isEmailInvalid = computed(() => {
-  return typingEmail && email.value.indexOf("@redberry.ge") <= 0;
-});
-
-console.log(isEmailInvalid.value);
-
-const isFormInvalid = computed(() => {
-  return (
-    !selectedFile.value ||
-    isInputInvalid.value ||
-    isTitleInvalid.value ||
-    isDescInvalid.value ||
-    !isEmailInvalid.value ||
-    !userSelectedDate.value ||
-    !selectedCategories.value.length > 0
-  );
-});
-
-watchEffect(() => {
-  console.log(
-    !selectedFile.value,
-    isInputInvalid.value,
-    isTitleInvalid.value,
-    isDescInvalid.value,
-    !userSelectedDate.value,
-    !selectedCategories.value.length > 0
-  );
-  isFormInvalidRef.value =
-    !selectedFile.value ||
-    isInputInvalid.value ||
-    isTitleInvalid.value ||
-    isDescInvalid.value ||
-    // !userSelectedDate.value ||
-    !selectedCategories.value.length > 0;
-});
-
-// **************************************************************************
-
-// ******************************** POST REQUEST ***************************
-
-// SUBMISSION
 const submitForm = async () => {
-  console.log(1);
-  if (!isFormInvalid.value) {
+  const sendRequest = { ...form.value };
+  sendRequest.categories = JSON.stringify(
+    sendRequest.categories.map((el) => el.id)
+  );
+  sendRequest.image = convertBack();
+
+  try {
+    const response = await axios.post(postRequestURL, sendRequest, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "multipart/form-data",
+      },
+    });
+
+    if (response.status === 204) {
+      // Handle the success case here
+      success.value = true;
+      resetForm();
+    } else {
+      console.error("Failed to submit blog post:", response.data);
+    }
+  } catch (error) {
+    console.error("Error submitting blog post:", error);
     try {
-      const formData = new FormData();
-      formData.append("author", authorName.value);
-      formData.append("title", title.value);
-      formData.append("description", description.value);
-      formData.append("email", email.value);
-      formData.append("publish_date", selectedDate.value);
-
-      const categoryIdsArray = selectedCategories.value.map(
-        (category) => category.id
-      );
-      formData.append("categories", JSON.stringify(categoryIdsArray));
-
-      formData.append("image", selectedFile.value);
-
-      console.log("Form Data:", Object.fromEntries(formData));
-
-      const response = await axios.post(postRequestURL, formData, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "multipart/form-data",
-        },
-      });
-
-      if (response.status === 204) {
-        // Handle the success case here
-        success.value = true;
-      } else {
-        console.error("Failed to submit blog post:", response.data);
-        // Handle the error case, show an error message to the user, etc.
+      const errorResponse = error.response;
+      if (errorResponse && errorResponse.data && errorResponse.data.errors) {
+        console.error("Validation Errors:", errorResponse.data.errors);
       }
     } catch (error) {
-      console.error("Error submitting blog post:", error);
-      try {
-        const errorResponse = error.response;
-        if (errorResponse && errorResponse.data && errorResponse.data.errors) {
-          console.error("Validation Errors:", errorResponse.data.errors);
-          // You can handle these validation errors here, display them to the user, etc.
-        }
-      } catch (error) {
-        console.error("Error handling validation errors:", error);
-      }
-      // Log specific validation errors from the API response
+      console.error("Error handling validation errors:", error);
     }
-  } else {
-    console.log("Form is invalid. Please check the input values.");
+    // Log specific validation errors from the API response
   }
 };
 
-// *************************************************************************
-
-// ***********************************GET CATEGORIES*****************************
+// ***************GET CATEGORIES**********************
 
 const categoryData = ref([]);
 
@@ -564,65 +471,60 @@ onMounted(async () => {
   }
 });
 
-// ************************************************
-const fileToBase64 = (file) => {
-  return new Promise((resolve, reject) => {
-    const reader = new FileReader();
-    reader.onload = () => resolve(reader.result.split(",")[1]);
-    reader.onerror = (error) => reject(error);
-    reader.readAsDataURL(file);
-  });
-};
+// *************************************************
 
 const displaySelectedFile = async (event) => {
   const fileInput = event.target;
   if (fileInput.files.length > 0) {
-    selectedFile.value = fileInput.files[0];
     selectedFileName.value = fileInput.files[0].name;
-    const base64Data = await fileToBase64(selectedFile.value);
-    updateLocalStorage(base64Data);
+    let file = fileInput.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = () => {
+        const base64String = reader.result;
+        form.value.image = base64String;
+      };
+    }
+  }
+  localStorage.setItem("fileName", JSON.stringify(selectedFileName.value));
+};
+
+const b64toBlob = (b64Data) => {
+  const byteCharacters = atob(b64Data);
+  const byteArrays = [];
+
+  for (let offset = 0; offset < byteCharacters.length; offset += 512) {
+    const slice = byteCharacters.slice(offset, offset + 512);
+
+    const byteNumbers = new Array(slice.length);
+    for (let i = 0; i < slice.length; i++) {
+      byteNumbers[i] = slice.charCodeAt(i);
+    }
+
+    const byteArray = new Uint8Array(byteNumbers);
+    byteArrays.push(byteArray);
+  }
+
+  return new Blob(byteArrays, { type: "image/png" });
+};
+
+const convertBack = () => {
+  if (JSON.parse(localStorage.getItem("form"))) {
+    const base64Data = JSON.parse(localStorage.getItem("form")).image.split(
+      ","
+    )[1];
+    const blob = b64toBlob(base64Data);
+    const file = new File([blob], "converted_image.png", { type: "image/png" });
+    return file;
   }
 };
 
-const updateLocalStorage = (fileData) => {
-  const data = {
-    selectedFile: fileData,
-    selectedFileName: selectedFileName.value,
-    authorName: authorName.value,
-    title: title.value,
-    description: description.value,
-    email: email.value,
-    selectedDate: selectedDate.value,
-    selectedCategories: selectedCategories.value,
-    isFormInvalid: isFormInvalidRef.value,
-  };
-  localStorage.setItem("localStorageKey", JSON.stringify(data));
-};
-
 const removePhoto = () => {
-  selectedFile.value = null;
+  form.value.image = null;
 };
 
-// ******* PERSIST DATA *******
-
-const savedData = JSON.parse(localStorage.getItem("localStorageKey"));
-if (savedData) {
-  selectedFile.value = savedData.selectedFile;
-  selectedFileName.value = savedData.selectedFileName;
-  authorName.value = savedData.authorName;
-  title.value = savedData.title;
-  description.value = savedData.description;
-  email.value = savedData.email;
-  selectedDate.value = savedData.selectedDate;
-  selectedCategories.value = savedData.selectedCategories;
-  // isFormInvalidRef.value = savedData.isFormInvalid;
+if (JSON.parse(localStorage.getItem("fileName"))) {
+  selectedFileName.value = JSON.parse(localStorage.getItem("fileName"));
 }
-console.log(savedData);
-
-watchEffect(() => {
-  // Update localStorage whenever form values change
-  updateLocalStorage(selectedFile.value);
-});
-
-// *****************************************************************************
 </script>
