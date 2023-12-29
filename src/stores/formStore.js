@@ -32,7 +32,6 @@ export const useFormStore = defineStore("formStore", () => {
     email: () => {
       const emailValue = form.value.email;
       return emailValue === "" || /^[^\s@]+@redberry\.ge$/.test(emailValue);
-      // return form.value.email.indexOf("@redberry.ge") > 0 || "";
     },
     publish_date: () => {
       return form.value.publish_date;

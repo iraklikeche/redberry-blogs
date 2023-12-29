@@ -7,7 +7,7 @@
         <img :src="logo" />
       </RouterLink>
     </div>
-    <div class="px-20 grid grid-cols-[25%,75%] items-center py-8">
+    <div class="px-20 grid grid-cols-[30%,70%] items-center py-8">
       <div class="self-start">
         <img :src="arrowLeft" class="cursor-pointer" @click="goBack" />
       </div>

@@ -1,7 +1,7 @@
 <template>
   <Navbar />
   <div class="px-20 pt-10">
-    <div class="grid grid-cols-[25%,75%] justify-center">
+    <div class="grid grid-cols-[30%,70%] justify-center">
       <div>
         <img :src="arrowLeft" class="cursor-pointer" @click="goToHomePage" />
       </div>
@@ -13,12 +13,12 @@
             height: `${(368 / 1080) * 100}vh`,
           }"
         />
-        <p class="text-xs font-extrabold mt-8 mb-2">{{ singleBlog.author }}</p>
-        <p class="text-xs mb-4 text-[#85858D]">
+        <p class="text-xl font-extrabold mt-8 mb-2">{{ singleBlog.author }}</p>
+        <p class="mb-4 text-[#85858D]">
           {{ singleBlog.publish_date }}
           <span v-if="singleBlog.email"> &#x2022; {{ singleBlog.email }}</span>
         </p>
-        <p class="font-bold text-3xl">
+        <p class="font-bold text-[32px]">
           {{ singleBlog.title }}
         </p>
         <ul class="my-6 flex gap-4 gap-y-2 flex-wrap">

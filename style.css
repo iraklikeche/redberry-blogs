@@ -10,9 +10,3 @@
 body {
   font-family: "Fira GO";
 }
-
-select {
-  -webkit-appearance: none;
-  -moz-appearance: none;
-  appearance: none;
-}

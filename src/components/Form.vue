@@ -69,10 +69,10 @@
             @input="typingAuthor = true"
             type="text"
             placeholder="შეიყვანეთ ავტორი"
-            class="bg-[#e4e3eb] px-4 py-2 rounded-xl w-full outline-[#5d37f3] border outline-[1.5px]"
+            class="bg-[#f7f7f7] px-4 py-2 rounded-xl w-full outline-[#5d37f3] border outline-[1.5px]"
             :class="{
               'border-[#ea1919] border': !isFieldValid.author() && typingAuthor,
-              'border-[#14d81c] border': isFieldValid.author() && typingAuthor,
+              'border-[#14d81c] border': isFieldValid.author(),
             }"
           />
           <ul
@@ -115,10 +115,10 @@
             type="text"
             @input="typingTitle = true"
             placeholder="შეიყვანეთ სათაური"
-            class="bg-[#e4e3eb] px-4 py-2 rounded-xl w-full outline-[#5d37f3] border outline-[1.5px]"
+            class="bg-[#f7f7f7] px-4 py-2 rounded-xl w-full outline-[#5d37f3] border outline-[1.5px]"
             :class="{
-              'border-[#ea1919] border': !isFieldValid.title() & typingTitle,
-              'border-[#14d81c] border': isFieldValid.title() & typingTitle,
+              'border-[#ea1919] border': !isFieldValid.title() && typingTitle,
+              'border-[#14d81c] border': isFieldValid.title(),
             }"
           />
           <ul class="text-[#85858d] text-xs mt-2">
@@ -141,10 +141,10 @@
       <textarea
         v-model="form.description"
         :class="{
-          'border-[#ea1919] border': !isFieldValid.description() & typingDesc,
-          'border-[#14d81c] border': isFieldValid.description() & typingDesc,
+          'border-[#ea1919] border': !isFieldValid.description() && typingDesc,
+          'border-[#14d81c] border': isFieldValid.description(),
         }"
-        class="bg-[#e4e3eb] mt-1 w-full py-2 px-4 rounded-xl resize-none outline-[#5d37f3] border outline-[1.5px]"
+        class="bg-[#f7f7f7] mt-1 w-full py-2 px-4 rounded-xl resize-none outline-[#5d37f3] border outline-[1.5px]"
         @input="typingDesc = true"
         rows="5"
         placeholder="შეიყვანეთ აღწერა"
@@ -171,10 +171,9 @@
           type="date"
           placeholder="Select a date"
           value="2023-01-01"
-          class="bg-[#e4e3eb] px-4 py-2 rounded-xl w-full mt-1 outline-[#5d37f3] border outline-[1.5px]"
+          class="bg-[#f7f7f7] px-4 py-2 rounded-xl w-full mt-1 outline-[#5d37f3] border outline-[1.5px]"
           :class="{
-            'border-[#14d81c] border':
-              userSelectedDate && !isFieldValid.publish_date(),
+            'border-[#14d81c]': isFieldValid.publish_date(),
           }"
         />
       </div>
@@ -188,15 +187,14 @@
           tabindex="0"
         >
           <div
-            class="selected-option bg-[#e4e3eb] px-2 py-[8px] rounded-xl w-full mt-1 border-2 cursor-pointer text-[#85858d] whitespace-nowrap overflow-hidden"
+            class="selected-option bg-[#f7f7f7] px-2 py-[8px] rounded-xl w-full mt-1 border-2 cursor-pointer text-[#85858d] whitespace-nowrap overflow-hidden"
             :class="{
-              'border-[#14d81c] border-1':
-                form.categories.length > 0 && !isFocused,
+              'border-[#14d81c]': isFieldValid.categories() > 0 && !isFocused,
             }"
             :style="{
               background: form.categories
                 ? form.categories.background_color
-                : '#e4e3eb',
+                : '#f7f7f7',
               color: form.categories ? form.categories.text_color : '#85858d',
               borderColor: isFocused ? ' #5d37f3' : '',
             }"
@@ -266,7 +264,7 @@
         >
           <img
             :src="arrowDown"
-            class="cursor-pointer bg-[#e4e3eb] p-1.5 rounded-r-[5px]"
+            class="cursor-pointer bg-[#f7f7f7] p-1.5 rounded-r-[5px]"
           />
         </div>
       </div>
@@ -279,7 +277,7 @@
           type="email"
           placeholder="example@redberry.ge"
           @input="typingEmail = true"
-          class="bg-[#e4e3eb] px-4 py-2 rounded-xl w-full mt-1 outline-[#5d37f3] border outline-[1.5px]"
+          class="bg-[#f7f7f7] px-4 py-2 rounded-xl w-full mt-1 outline-[#5d37f3] border outline-[1.5px]"
           :class="{
             'border-[#ea1919] border': !isFieldValid.email() && typingEmail,
             'border-[#14d81c] border': isFieldValid.email() && typingEmail,

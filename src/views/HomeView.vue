@@ -39,9 +39,11 @@ onMounted(async () => {
 <template>
   <Navbar />
   <main>
-    <div class="bg-gradient-to-b from-[#e0e9ee] px-20 py-16">
+    <div
+      class="bg-gradient-to-b from-[#e0e9ee] from-1% via-white via-40% to-white to-90% px-20 py-16"
+    >
       <div class="flex items-center justify-between py-4">
-        <h1 class="text-5xl font-extrabold">ბლოგი</h1>
+        <h1 class="text-5xl font-black">ბლოგი</h1>
         <img :src="blog" />
       </div>
       <div class="my-12">
