@@ -51,7 +51,7 @@
 <script setup>
 import { useRoute, useRouter } from "vue-router";
 import Navbar from "@/components/Navbar.vue";
-import left from "../assets/images/arrow-left.png";
+import left from "../assets/images/Arrow-left.png";
 import { onMounted, ref, watch } from "vue";
 import axios from "axios";
 import CardSlider from "@/components/CardSlider.vue";

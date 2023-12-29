@@ -32,7 +32,8 @@
       :to="{ name: 'singleCard', params: { id: blog.id } }"
       class="text-[#5D37F3] text-sm font-medium hover:text-[#512be7] transition-colors active:[#4721dd]"
     >
-      სრულად ნახვა
+      <span class="mr-2"> სრულად ნახვა </span>
+      <img :src="viewfull" class="inline" />
     </RouterLink>
   </div>
 </template>
@@ -40,6 +41,7 @@
 <script setup>
 const props = defineProps(["blog"]);
 import { computed } from "vue";
+import viewfull from "@/assets/images/viewfull.png";
 
 const isPublishDatePassed = computed(() => {
   const publishDate = new Date(props.blog.publish_date);
