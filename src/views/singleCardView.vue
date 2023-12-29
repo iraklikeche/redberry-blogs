@@ -3,7 +3,11 @@
   <div class="px-20 pt-10">
     <div class="grid grid-cols-[30%,70%] justify-center">
       <div>
-        <img :src="arrowLeft" class="cursor-pointer" @click="goToHomePage" />
+        <img
+          :src="left"
+          class="cursor-pointer bg-[#e4e3eb] rounded-full py-3 px-4 hover:bg-[#d9d8e0] active:bg-[#cfced6] transition-colors"
+          @click="goToHomePage"
+        />
       </div>
       <div class="grid grid-cols-1 max-w-3xl">
         <img
@@ -47,7 +51,7 @@
 <script setup>
 import { useRoute, useRouter } from "vue-router";
 import Navbar from "@/components/Navbar.vue";
-import arrowLeft from "../assets/images/Arrow-left.png";
+import left from "../assets/images/arrow-left.png";
 import { onMounted, ref, watch } from "vue";
 import axios from "axios";
 import CardSlider from "@/components/CardSlider.vue";

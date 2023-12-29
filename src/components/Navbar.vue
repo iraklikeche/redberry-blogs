@@ -6,7 +6,7 @@
       <img :src="logo" class="w-[150px] h-6" />
     </RouterLink>
     <button
-      class="bg-[#5D37F3] px-4 py-2 text-white rounded-lg text-sm"
+      class="bg-[#5D37F3] px-4 py-2 text-white rounded-lg text-sm hover:bg-[#512be7] transition-colors active:[#4721dd]"
       @click="openModal"
       v-if="!isLogged"
     >
@@ -14,7 +14,7 @@
     </button>
     <RouterLink
       :to="{ name: 'addBlog' }"
-      class="bg-[#5D37F3] px-4 py-2 text-white rounded-lg text-sm"
+      class="bg-[#5D37F3] px-4 py-2 text-white rounded-lg text-sm hover:bg-[#512be7] transition-colors active:[#4721dd]"
       v-if="isLogged"
     >
       დაამატე ბლოგი

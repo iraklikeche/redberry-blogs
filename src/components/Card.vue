@@ -30,7 +30,7 @@
 
     <RouterLink
       :to="{ name: 'singleCard', params: { id: blog.id } }"
-      class="text-[#5D37F3] text-sm font-medium"
+      class="text-[#5D37F3] text-sm font-medium hover:text-[#512be7] transition-colors active:[#4721dd]"
     >
       სრულად ნახვა
     </RouterLink>

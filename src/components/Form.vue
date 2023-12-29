@@ -320,7 +320,7 @@
     </div>
     <div class="mt-10 flex items-end justify-end">
       <button
-        class="bg-[#5D37F3] py-2 w-[284px] text-white rounded-lg"
+        class="bg-[#5D37F3] py-2 w-[284px] text-white rounded-lg hover:bg-[#512be7] transition-colors active:[#4721dd]"
         :class="{
           'opacity-50': !isFormValidRef,
         }"
