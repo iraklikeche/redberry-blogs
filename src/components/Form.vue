@@ -262,9 +262,12 @@
           </div>
         </div>
         <div
-          class="absolute top-[50%] right-[10px] translate-x-[-10%] translate-y-[20%] pointer-events-none z-20 overflow-hidden"
+          class="absolute top-[39%] right-[-2px] translate-x-[-10%] translate-y-[20%] pointer-events-none z-20 overflow-hidden"
         >
-          <img :src="arrowDown" class="cursor-pointer" />
+          <img
+            :src="arrowDown"
+            class="cursor-pointer bg-[#e4e3eb] p-1.5 rounded-r-[5px]"
+          />
         </div>
       </div>
       <!-- ***************** EMAIL ********************* -->

@@ -30,7 +30,9 @@ export const useFormStore = defineStore("formStore", () => {
       return form.value.description.length >= 2;
     },
     email: () => {
-      return form.value.email.indexOf("@redberry.ge") > 0;
+      const emailValue = form.value.email;
+      return emailValue === "" || /^[^\s@]+@redberry\.ge$/.test(emailValue);
+      // return form.value.email.indexOf("@redberry.ge") > 0 || "";
     },
     publish_date: () => {
       return form.value.publish_date;
@@ -48,7 +50,8 @@ export const useFormStore = defineStore("formStore", () => {
         isFieldValid.value.description() &&
         isFieldValid.value.publish_date() &&
         isFieldValid.value.categories() &&
-        isFieldValid.value.image()
+        isFieldValid.value.image() &&
+        isFieldValid.value.email()
       );
     },
   });
