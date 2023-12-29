@@ -381,6 +381,10 @@ const isDropdownOpen = ref(false);
 const resetForm = () => {
   localStorage.removeItem("form");
   detect();
+  typingAuthor.value = false;
+  typingTitle.value = false;
+  typingDesc.value = false;
+  typingEmail.value = false;
 };
 
 const isFormValidRef = computed(() => {
@@ -456,7 +460,6 @@ const submitForm = async () => {
     } catch (error) {
       console.error("Error handling validation errors:", error);
     }
-    // Log specific validation errors from the API response
   }
 };
 
