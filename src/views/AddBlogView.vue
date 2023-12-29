@@ -27,7 +27,7 @@
 
 <script setup>
 import logo from "../assets/images/logo.png";
-import left from "../assets/images/arrow-left.png";
+import left from "../assets/images/arrowLeft.png";
 import Form from "../components/Form.vue";
 import { useRouter } from "vue-router";
 
