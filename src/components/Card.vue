@@ -44,7 +44,7 @@ import { computed } from "vue";
 const isPublishDatePassed = computed(() => {
   const publishDate = new Date(props.blog.publish_date);
   const currentDate = new Date();
-  console.log("current Date::", currentDate, "Publish Date:", publishDate);
+  // console.log("current Date::", currentDate, "Publish Date:", publishDate);
   return publishDate <= currentDate;
 });
 </script>
@@ -52,7 +52,7 @@ const isPublishDatePassed = computed(() => {
 <style scoped>
 .cardImageHolder {
   width: 100%;
-  /* height: 328px; */
+
   background-repeat: no-repeat;
   background-position: center;
   background-size: cover;

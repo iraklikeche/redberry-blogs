@@ -177,6 +177,9 @@ const login = async () => {
         },
       }
     );
+    if (response.status !== 204) {
+      errorMessage.value = true;
+    }
 
     // Handle the response here
     console.log("Response:", response.data);
